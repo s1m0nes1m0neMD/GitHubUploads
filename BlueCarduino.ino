@@ -1,13 +1,17 @@
+//s1m0nes1m0neMD 2015 DÜZCE
+
+// Bluetooth ile kumanda edilen kumandalı araba Arduino +Android
+
 #define echoPin 8 // Echo Pin
 #define trigPin 9 // Trigger Pin
 #define stopfar 13 // Stop Farlar
 #define gerivitesfar 12 // gerivites Farlar
 #define onfarlar 2 // ön farlar
 
-int duration, distance; // Duration used to calculate distance
+int duration, distance; // Duration (zamanlama) Mesafenin hesaplanması için sesin saniyede aldığı yol ile ilgili hesap için de mesafe ( used to calculate distance)
 #include <SoftwareSerial.h>
 
-SoftwareSerial BT(10, 11); //TX, RX respetively
+SoftwareSerial BT(10, 11); //TX, RX sırasıyla (respetively)
 String readdata;
 
 void setup() {
@@ -19,9 +23,9 @@ void setup() {
   pinMode(6, OUTPUT);
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
- pinMode(stopfar, OUTPUT); // frene basıldığı zaman yanacak Stop Farlar
- pinMode(gerivitesfar, OUTPUT); // geriye basıldığı zaman yanacak gerivites Farlar
- pinMode(onfarlar, OUTPUT); // ileri gaza basınca ön farlar yansın
+ pinMode(stopfar, OUTPUT); // frene basıldığı zaman yanacak (Stop light when brake is on)
+ pinMode(gerivitesfar, OUTPUT); // geriye basıldığı zaman yanacak (revese lights when car goes backward.)
+ pinMode(onfarlar, OUTPUT); // ileri gaza basınca ön farlar yansın (head lights when car goes forward)
 }
 //-----------------------------------------------------------------------// 
 void loop() {
@@ -34,6 +38,7 @@ digitalWrite(trigPin, LOW);
  digitalWrite(trigPin, LOW);
  duration = pulseIn(echoPin, HIGH);
  
+ //Mesafenin hesaplanması için sesin saniyede aldığı yol ile ilgili hesap için de mesafe
  //Calculate the distance (in cm) based on the speed of sound.
  distance = duration/58.2;
  if ( distance< 30) {BT.print(distance);
@@ -48,10 +53,10 @@ if (distance> 40) {
  BT.print(distance); BT.println("cm");digitalWrite(stopfar, LOW);readdata="";
   delay(50); }
  
-  while (BT.available()){  //Check if there is an available byte to read
-  delay(10); //Delay added to make thing stable
-  char c = BT.read(); //Conduct a serial read
-  readdata += c; //build the string- "forward", "reverse", "left" and "right"
+  while (BT.available()){  //okunacak BT data varsa (Check if there is an available byte to read)
+  delay(10); //stabil veri için bir miktar bekleme (Delay added to make thing stable)
+  char c = BT.read(); //hadi veriyi okuyalım (Conduct a serial read)
+  readdata += c; //ve bu kelimeleri oluşturana kadar karakter ekliyoruz (build the string- "forward", "reverse", "left" and "right")
   } 
   if (readdata.length() > 0) {
     Serial.println(readdata);
@@ -105,5 +110,7 @@ if (distance> 40) {
  }
  else
 readdata="";}
-} //Reset the variable
+} // ve değişkeni yenile (Reset the variable)
+
+//s1m0nes1m0neMD 2015 DÜZCE
 
